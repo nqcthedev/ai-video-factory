@@ -1,0 +1,100 @@
+{
+  "title": "The 5-Minute Rule: Why You Can’t Start Tasks",
+  "description": "Procrastination isn't about laziness, it's about emotional regulation. Learn how the 5-minute rule bypasses your brain's resistance to get things done.\n\n#productivity #psychology #focus #habits",
+  "tags": [
+    "procrastination",
+    "productivity hacks",
+    "psychology",
+    "time management",
+    "5 minute rule",
+    "self improvement",
+    "brain science",
+    "focus tips"
+  ],
+  "thumbnailText": "STOP PROCRASTINATING",
+  "theme": "ocean",
+  "hook": {
+    "narration": "Procrastination is rarely a time management problem. It is actually a way of managing your difficult emotions.",
+    "keyword": "NOT LAZY",
+    "subtitle": "It is about managing your feelings",
+    "visual": {
+      "description": "A close-up of a person looking stressed at a desk with soft blue lighting.",
+      "searchQuery": "stressed person desk",
+      "icon": "frown",
+      "layout": "hero"
+    }
+  },
+  "scenes": [
+    {
+      "narration": "Your brain avoids tasks because they feel boring, difficult, or overwhelming. It tries to protect you from that discomfort by scrolling through your phone instead.",
+      "keyword": "PROTECTION",
+      "subtitle": "Avoiding the pain of starting",
+      "visual": {
+        "description": "A glowing human brain with digital neural pathways against a dark background.",
+        "searchQuery": "glowing human brain",
+        "icon": "brain",
+        "layout": "hero"
+      }
+    },
+    {
+      "narration": "The 5-minute rule is simple. Commit to working on a task for exactly 5 minutes, but give yourself real, honest permission to stop once that timer hits zero.",
+      "keyword": "5 MINUTES",
+      "subtitle": "A tiny window of commitment",
+      "visual": {
+        "description": "A minimalist mechanical kitchen timer on a clean white table.",
+        "searchQuery": "timer on table",
+        "icon": "timer",
+        "layout": "stat"
+      }
+    },
+    {
+      "narration": "Starting is the hardest part for our brains. Once you break the seal, momentum kicks in and your brain naturally wants to finish what it has already started.",
+      "keyword": "MOMENTUM",
+      "subtitle": "The hardest part is behind you",
+      "visual": {
+        "description": "A single drop of water hitting a calm pool creating ripples.",
+        "searchQuery": "water ripple effect",
+        "icon": "zap",
+        "layout": "hero"
+      }
+    },
+    {
+      "narration": "Imagine a messy kitchen or a 10-page report. Thinking about the whole project is painful, but anyone can wash just five plates or write three sentences in 300 seconds.",
+      "keyword": "300 SECS",
+      "subtitle": "Small wins lead to big results",
+      "visual": {
+        "description": "A stack of clean dishes sitting by a sunlit window.",
+        "searchQuery": "clean kitchen dishes",
+        "icon": "glass-water",
+        "layout": "stat"
+      }
+    },
+    {
+      "narration": "To make this work, you must set a visible timer, make the first step tiny and specific, and remove friction by putting your phone in another room.",
+      "keyword": "3 TIPS",
+      "subtitle": "How to master the rule",
+      "visual": {
+        "description": "A notebook with three clean checkmarks on a wooden desk.",
+        "searchQuery": "checklist on desk",
+        "icon": "list-checks",
+        "layout": "list",
+        "points": [
+          "Set a visible timer",
+          "Make the step tiny",
+          "Remove friction"
+        ]
+      }
+    },
+    {
+      "narration": "Lowering the barrier to entry tricks your brain into action without the fear of failure. Follow for one new idea every day.",
+      "keyword": "START SMALL",
+      "subtitle": "Action beats perfection every time",
+      "visual": {
+        "description": "A macro shot of a green sprout growing out of dry soil.",
+        "searchQuery": "sprout growing soil",
+        "icon": "lightbulb",
+        "layout": "quote"
+      }
+    }
+  ]
+}

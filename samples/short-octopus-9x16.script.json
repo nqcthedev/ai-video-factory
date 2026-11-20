@@ -1,0 +1,93 @@
+{
+  "title": "Why Are Octopuses So Smart?",
+  "description": "Octopuses have a unique nervous system, often called 'nine brains', allowing them incredible problem-solving and escape artistry. Discover how their intelligence evolved separately from ours.\n\n#shorts #octopus #marinelife #sciencefacts",
+  "tags": [
+    "octopus",
+    "smart animals",
+    "marine life",
+    "animal intelligence",
+    "science facts",
+    "curious minutes",
+    "youtube shorts",
+    "cephalopod",
+    "brain facts",
+    "inky the octopus",
+    "ocean animals",
+    "animal behavior"
+  ],
+  "thumbnailText": "OCTOPUS BRAINS",
+  "theme": "ocean",
+  "hook": {
+    "narration": "Octopuses have a central brain, but they also have a cluster of neurons in each of their eight arms.",
+    "keyword": "9 BRAINS?",
+    "subtitle": "One central, eight in arms",
+    "visual": {
+      "description": "An artistic illustration of an octopus with glowing neural pathways extending into its arms, set against a dark ocean background.",
+      "searchQuery": "octopus neural network",
+      "icon": "brain-circuit",
+      "layout": "hero"
+    }
+  },
+  "scenes": [
+    {
+      "narration": "Roughly 500 million neurons power them. About two-thirds of those are in their limbs, which act semi-independently.",
+      "keyword": "2/3 NEURONS",
+      "subtitle": "In the arms",
+      "visual": {
+        "description": "Close-up shot of an octopus arm with suckers, showing intricate detail, in clear blue water.",
+        "searchQuery": "octopus arm suckers",
+        "icon": "hand",
+        "layout": "stat"
+      }
+    },
+    {
+      "narration": "Every sucker can taste what it touches. This lets them solve puzzles, open jars, and navigate complex mazes.",
+      "keyword": "TASTE BY TOUCH",
+      "subtitle": "500 million neurons",
+      "visual": {
+        "description": "An octopus inside an aquarium, manipulating a clear jar with its arms, trying to open it.",
+        "searchQuery": "octopus opening jar",
+        "icon": "puzzle",
+        "layout": "list",
+        "points": [
+          "Open Jars",
+          "Solve Mazes",
+          "Use Tools"
+        ]
+      }
+    },
+    {
+      "narration": "In 2016, Inky the octopus famously escaped a New Zealand aquarium by squeezing through a narrow drainpipe.",
+      "keyword": "INKY ESCAPES",
+      "subtitle": "Through a drainpipe!",
+      "visual": {
+        "description": "Stylized illustration of an octopus squeezing through a narrow pipe or opening, looking determined.",
+        "searchQuery": "octopus escape pipe",
+        "icon": "key",
+        "layout": "hero"
+      }
+    },
+    {
+      "narration": "They can instantly change color and texture to camouflage, yet most species live only 1 to 2 years.",
+      "keyword": "INSTANT CAMO",
+      "subtitle": "Fast learners",
+      "visual": {
+        "description": "An octopus perfectly camouflaged against a rocky seafloor, almost invisible.",
+        "searchQuery": "octopus camouflage seamless",
+        "icon": "eye",
+        "layout": "hero"
+      }
+    },
+    {
+      "narration": "They learn alone, without parents. This intelligence evolved separately from ours. Follow for one new idea every day.",
+      "keyword": "ALIEN MINDS",
+      "subtitle": "Evolved separately",
+      "visual": {
+        "description": "A silhouette of an octopus against a deep space background, with nebulae and stars, suggesting alien intelligence.",
+        "searchQuery": "octopus alien mind",
+        "icon": "infinity",
+        "layout": "quote"
+      }
+    }
+  ]
+}

@@ -1,0 +1,1552 @@
+{
+  "version": 1,
+  "id": "20261120-0543-short-why-octopuses-are-so-smart-85a8",
+  "topic": "Why octopuses are so smart",
+  "format": "short",
+  "createdAt": "2026-11-20T05:43:15.361Z",
+  "updatedAt": "2026-11-20T06:02:50.519Z",
+  "status": "done",
+  "options": {
+    "brief": "Concrete, accurate facts only: an octopus has one central brain plus a cluster of neurons in each of its 8 arms (often called nine brains); about two-thirds of its roughly 500 million neurons are in the arms; suckers can taste by touch; they solve puzzles and open jars; Inky the octopus escaped New Zealand's National Aquarium in 2016 through a drain pipe; instant camouflage; most live only 1-2 years and learn alone. End on the idea that this intelligence evolved separately from ours."
+  },
+  "config": {
+    "channel": {
+      "name": "Curious Minutes",
+      "niche": "evergreen science, psychology and self-improvement explainers",
+      "tone": "warm, curious and punchy; concrete facts over hype; no clickbait claims",
+      "audience": "general audience, 16-45, watching on a phone",
+      "language": "English",
+      "callToAction": "Follow for one new idea every day.",
+      "theme": "auto",
+      "extraInstructions": ""
+    },
+    "llm": {
+      "provider": "gemini",
+      "model": "gemini-2.5-flash",
+      "temperature": 0.8,
+      "maxAttempts": 4,
+      "requestsPerMinute": 8,
+      "timeoutMs": 120000,
+      "reasoningEffort": "low"
+    },
+    "tts": {
+      "order": [
+        "kokoro",
+        "gemini",
+        "openai",
+        "elevenlabs"
+      ],
+      "sceneGapSec": 0.28,
+      "kokoro": {
+        "voice": "af_heart",
+        "speed": 1,
+        "lang": "en-us",
+        "sentencePauseSec": 0.12
+      },
+      "gemini": {
+        "model": "gemini-2.5-flash-preview-tts",
+        "voice": "Kore",
+        "style": "Say in a warm, upbeat, clear explainer voice:"
+      },
+      "openai": {
+        "model": "gpt-4o-mini-tts",
+        "voice": "coral",
+        "instructions": "Warm, upbeat, clear explainer voice. Natural pacing.",
+        "speed": 1
+      },
+      "elevenlabs": {
+        "voiceId": "21m00Tcm4TlvDq8ikWAM",
+        "modelId": "eleven_multilingual_v2",
+        "stability": 0.45,
+        "similarityBoost": 0.8
+      }
+    },
+    "visuals": {
+      "order": [
+        "designed"
+      ],
+      "geminiImage": {
+        "model": "gemini-2.5-flash-image",
+        "style": "cinematic, photorealistic, soft natural light, rich color, shallow depth of field, no text, no watermark"
+      },
+      "pexels": {
+        "perPage": 8
+      },
+      "concurrency": 3
+    },
+    "render": {
+      "fps": 30,
+      "crf": 20,
+      "preset": "medium",
+      "transition": {
+        "duration": 0.4,
+        "types": [
+          "slideleft",
+          "slideup"
+        ]
+      },
+      "kenBurnsZoom": 1.08,
+      "captions": {
+        "enabled": true,
+        "font": "Inter Display Black",
+        "textColor": "#FFFFFF",
+        "uppercase": true
+      },
+      "music": {
+        "enabled": true,
+        "volumeDb": -17,
+        "duck": true
+      },
+      "loudness": {
+        "integratedLufs": -14,
+        "truePeakDb": -1.5,
+        "lra": 11
+      },
+      "thumbnail": true
+    },
+    "publish": {
+      "youtube": {
+        "enabled": false,
+        "privacyStatus": "private",
+        "categoryId": "27",
+        "madeForKids": false,
+        "containsSyntheticMedia": true,
+        "defaultLanguage": "en"
+      }
+    },
+    "batch": {
+      "concurrency": 2
+    },
+    "costs": {
+      "llm": {
+        "gemini-2.5-flash": {
+          "inputPerMTok": 0.3,
+          "outputPerMTok": 2.5
+        },
+        "gemini-2.5-flash-lite": {
+          "inputPerMTok": 0.1,
+          "outputPerMTok": 0.4
+        },
+        "gpt-4o-mini": {
+          "inputPerMTok": 0.15,
+          "outputPerMTok": 0.6
+        }
+      },
+      "tts": {
+        "kokoro": 0,
+        "geminiPerMChars": 20,
+        "openaiPerMChars": 15,
+        "elevenlabsPerMChars": 180
+      },
+      "images": {
+        "geminiPerImage": 0.039,
+        "pexelsPerImage": 0,
+        "designedPerImage": 0
+      }
+    },
+    "paths": {
+      "jobsDir": "jobs"
+    }
+  },
+  "configHash": "b67a4b1dc220",
+  "stages": {
+    "script": {
+      "status": "done",
+      "attempts": 2,
+      "startedAt": "2026-11-20T05:44:32.672Z",
+      "finishedAt": "2026-11-20T05:44:45.226Z",
+      "durationMs": 12554,
+      "data": {
+        "file": "script.json",
+        "attempts": 2,
+        "usage": {
+          "promptTokens": 3906,
+          "completionTokens": 2030
+        },
+        "model": "gemini-3-flash-preview",
+        "warnings": []
+      }
+    },
+    "voice": {
+      "status": "done",
+      "attempts": 1,
+      "startedAt": "2026-11-20T05:44:45.227Z",
+      "finishedAt": "2026-11-20T05:45:01.749Z",
+      "durationMs": 16522,
+      "data": {
+        "provider": "kokoro",
+        "voice": "kokoro:af_heart",
+        "characters": 645,
+        "scenes": [
+          {
+            "index": 0,
+            "file": "audio/scene-00.wav",
+            "duration": 5.975,
+            "words": [
+              {
+                "text": "Octopuses",
+                "start": 0.08500000000000002,
+                "end": 0.81
+              },
+              {
+                "text": "have",
+                "start": 0.8600000000000001,
+                "end": 0.9850000000000001
+              },
+              {
+                "text": "a",
+                "start": 1.01,
+                "end": 1.0350000000000001
+              },
+              {
+                "text": "central",
+                "start": 1.11,
+                "end": 1.4600000000000002
+              },
+              {
+                "text": "brain",
+                "start": 1.51,
+                "end": 2.135,
+                "breakAfter": ","
+              },
+              {
+                "text": "but",
+                "start": 2.2350000000000003,
+                "end": 2.335
+              },
+              {
+                "text": "they",
+                "start": 2.3600000000000003,
+                "end": 2.46
+              },
+              {
+                "text": "also",
+                "start": 2.51,
+                "end": 2.8600000000000003
+              },
+              {
+                "text": "have",
+                "start": 2.91,
+                "end": 3.035
+              },
+              {
+                "text": "a",
+                "start": 3.0600000000000005,
+                "end": 3.085
+              },
+              {
+                "text": "cluster",
+                "start": 3.135,
+                "end": 3.46
+              },
+              {
+                "text": "of",
+                "start": 3.4850000000000003,
+                "end": 3.535
+              },
+              {
+                "text": "neurons",
+                "start": 3.585,
+                "end": 4.185
+              },
+              {
+                "text": "in",
+                "start": 4.26,
+                "end": 4.36
+              },
+              {
+                "text": "each",
+                "start": 4.435,
+                "end": 4.635
+              },
+              {
+                "text": "of",
+                "start": 4.66,
+                "end": 4.71
+              },
+              {
+                "text": "their",
+                "start": 4.735,
+                "end": 4.885
+              },
+              {
+                "text": "eight",
+                "start": 4.96,
+                "end": 5.135
+              },
+              {
+                "text": "arms",
+                "start": 5.1850000000000005,
+                "end": 5.835,
+                "breakAfter": "."
+              }
+            ],
+            "timing": "provider"
+          },
+          {
+            "index": 1,
+            "file": "audio/scene-01.wav",
+            "duration": 7.325,
+            "words": [
+              {
+                "text": "Roughly",
+                "start": 0.08500000000000002,
+                "end": 0.4600000000000001
+              },
+              {
+                "text": "500",
+                "start": 0.56,
+                "end": 1.2100000000000002
+              },
+              {
+                "text": "million",
+                "start": 1.26,
+                "end": 1.56
+              },
+              {
+                "text": "neurons",
+                "start": 1.61,
+                "end": 2.0600000000000005
+              },
+              {
+                "text": "power",
+                "start": 2.135,
+                "end": 2.41
+              },
+              {
+                "text": "them",
+                "start": 2.4350000000000005,
+                "end": 2.9850000000000003,
+                "breakAfter": "."
+              },
+              {
+                "text": "About",
+                "start": 3.16,
+                "end": 3.3600000000000003
+              },
+              {
+                "text": "two-thirds",
+                "start": 3.41,
+                "end": 3.885
+              },
+              {
+                "text": "of",
+                "start": 3.91,
+                "end": 3.96
+              },
+              {
+                "text": "those",
+                "start": 4.01,
+                "end": 4.31
+              },
+              {
+                "text": "are",
+                "start": 4.36,
+                "end": 4.435
+              },
+              {
+                "text": "in",
+                "start": 4.46,
+                "end": 4.51
+              },
+              {
+                "text": "their",
+                "start": 4.535,
+                "end": 4.66
+              },
+              {
+                "text": "limbs",
+                "start": 4.71,
+                "end": 5.235,
+                "breakAfter": ","
+              },
+              {
+                "text": "which",
+                "start": 5.335,
+                "end": 5.51
+              },
+              {
+                "text": "act",
+                "start": 5.585,
+                "end": 5.8100000000000005
+              },
+              {
+                "text": "semi-independently",
+                "start": 5.91,
+                "end": 7.1850000000000005,
+                "breakAfter": "."
+              }
+            ],
+            "timing": "provider"
+          },
+          {
+            "index": 2,
+            "file": "audio/scene-02.wav",
+            "duration": 7.035,
+            "words": [
+              {
+                "text": "Every",
+                "start": 0.09500000000000003,
+                "end": 0.3450000000000001
+              },
+              {
+                "text": "sucker",
+                "start": 0.42000000000000004,
+                "end": 0.6950000000000001
+              },
+              {
+                "text": "can",
+                "start": 0.7450000000000001,
+                "end": 0.8200000000000001
+              },
+              {
+                "text": "taste",
+                "start": 0.8700000000000001,
+                "end": 1.195
+              },
+              {
+                "text": "what",
+                "start": 1.2200000000000002,
+                "end": 1.2950000000000002
+              },
+              {
+                "text": "it",
+                "start": 1.32,
+                "end": 1.37
+              },
+              {
+                "text": "touches",
+                "start": 1.4200000000000002,
+                "end": 2.245,
+                "breakAfter": "."
+              },
+              {
+                "text": "This",
+                "start": 2.4200000000000004,
+                "end": 2.5700000000000003
+              },
+              {
+                "text": "lets",
+                "start": 2.62,
+                "end": 2.7950000000000004
+              },
+              {
+                "text": "them",
+                "start": 2.8200000000000003,
+                "end": 2.97
+              },
+              {
+                "text": "solve",
+                "start": 3.0450000000000004,
+                "end": 3.3200000000000003
+              },
+              {
+                "text": "puzzles",
+                "start": 3.37,
+                "end": 3.9200000000000004,
+                "breakAfter": ","
+              },
+              {
+                "text": "open",
+                "start": 4.045,
+                "end": 4.345000000000001
+              },
+              {
+                "text": "jars",
+                "start": 4.395,
+                "end": 4.945,
+                "breakAfter": ","
+              },
+              {
+                "text": "and",
+                "start": 5.045,
+                "end": 5.120000000000001
+              },
+              {
+                "text": "navigate",
+                "start": 5.17,
+                "end": 5.645
+              },
+              {
+                "text": "complex",
+                "start": 5.695,
+                "end": 6.145
+              },
+              {
+                "text": "mazes",
+                "start": 6.195,
+                "end": 6.895,
+                "breakAfter": "."
+              }
+            ],
+            "timing": "provider"
+          },
+          {
+            "index": 3,
+            "file": "audio/scene-03.wav",
+            "duration": 7.6,
+            "words": [
+              {
+                "text": "In",
+                "start": 0.08500000000000002,
+                "end": 0.18500000000000005
+              },
+              {
+                "text": "2016",
+                "start": 0.23500000000000004,
+                "end": 1.5350000000000001,
+                "breakAfter": ","
+              },
+              {
+                "text": "Inky",
+                "start": 1.6600000000000001,
+                "end": 2.0600000000000005
+              },
+              {
+                "text": "the",
+                "start": 2.085,
+                "end": 2.16
+              },
+              {
+                "text": "octopus",
+                "start": 2.2350000000000003,
+                "end": 2.7350000000000003
+              },
+              {
+                "text": "famously",
+                "start": 2.8100000000000005,
+                "end": 3.26
+              },
+              {
+                "text": "escaped",
+                "start": 3.3100000000000005,
+                "end": 3.7350000000000003
+              },
+              {
+                "text": "a",
+                "start": 3.76,
+                "end": 3.785
+              },
+              {
+                "text": "New",
+                "start": 3.835,
+                "end": 3.96
+              },
+              {
+                "text": "Zealand",
+                "start": 4.01,
+                "end": 4.285
+              },
+              {
+                "text": "aquarium",
+                "start": 4.31,
+                "end": 5.035
+              },
+              {
+                "text": "by",
+                "start": 5.11,
+                "end": 5.26
+              },
+              {
+                "text": "squeezing",
+                "start": 5.335,
+                "end": 5.835
+              },
+              {
+                "text": "through",
+                "start": 5.91,
+                "end": 6.11
+              },
+              {
+                "text": "a",
+                "start": 6.16,
+                "end": 6.21
+              },
+              {
+                "text": "narrow",
+                "start": 6.285,
+                "end": 6.61
+              },
+              {
+                "text": "drainpipe",
+                "start": 6.66,
+                "end": 7.46,
+                "breakAfter": "."
+              }
+            ],
+            "timing": "provider"
+          },
+          {
+            "index": 4,
+            "file": "audio/scene-04.wav",
+            "duration": 6.225,
+            "words": [
+              {
+                "text": "They",
+                "start": 0.06000000000000005,
+                "end": 0.16000000000000003
+              },
+              {
+                "text": "can",
+                "start": 0.21000000000000002,
+                "end": 0.31000000000000005
+              },
+              {
+                "text": "instantly",
+                "start": 0.385,
+                "end": 0.7850000000000001
+              },
+              {
+                "text": "change",
+                "start": 0.835,
+                "end": 1.2100000000000002
+              },
+              {
+                "text": "color",
+                "start": 1.2850000000000001,
+                "end": 1.6600000000000001
+              },
+              {
+                "text": "and",
+                "start": 1.7100000000000002,
+                "end": 1.785
+              },
+              {
+                "text": "texture",
+                "start": 1.8350000000000002,
+                "end": 2.26
+              },
+              {
+                "text": "to",
+                "start": 2.3100000000000005,
+                "end": 2.3600000000000003
+              },
+              {
+                "text": "camouflage",
+                "start": 2.41,
+                "end": 3.285,
+                "breakAfter": ","
+              },
+              {
+                "text": "yet",
+                "start": 3.41,
+                "end": 3.535
+              },
+              {
+                "text": "most",
+                "start": 3.585,
+                "end": 3.785
+              },
+              {
+                "text": "species",
+                "start": 3.835,
+                "end": 4.285
+              },
+              {
+                "text": "live",
+                "start": 4.335,
+                "end": 4.635
+              },
+              {
+                "text": "only",
+                "start": 4.6850000000000005,
+                "end": 4.91
+              },
+              {
+                "text": "1",
+                "start": 4.985,
+                "end": 5.16
+              },
+              {
+                "text": "to",
+                "start": 5.21,
+                "end": 5.285
+              },
+              {
+                "text": "2",
+                "start": 5.335,
+                "end": 5.46
+              },
+              {
+                "text": "years",
+                "start": 5.51,
+                "end": 6.085,
+                "breakAfter": "."
+              }
+            ],
+            "timing": "provider"
+          },
+          {
+            "index": 5,
+            "file": "audio/scene-05.wav",
+            "duration": 7.17,
+            "words": [
+              {
+                "text": "They",
+                "start": 0.08000000000000002,
+                "end": 0.18
+              },
+              {
+                "text": "learn",
+                "start": 0.22999999999999998,
+                "end": 0.38000000000000006
+              },
+              {
+                "text": "alone",
+                "start": 0.43,
+                "end": 0.905,
+                "breakAfter": ","
+              },
+              {
+                "text": "without",
+                "start": 1.0050000000000001,
+                "end": 1.2550000000000001
+              },
+              {
+                "text": "parents",
+                "start": 1.3050000000000002,
+                "end": 2.0549999999999997,
+                "breakAfter": "."
+              },
+              {
+                "text": "This",
+                "start": 2.205,
+                "end": 2.355
+              },
+              {
+                "text": "intelligence",
+                "start": 2.405,
+                "end": 3.03
+              },
+              {
+                "text": "evolved",
+                "start": 3.08,
+                "end": 3.455
+              },
+              {
+                "text": "separately",
+                "start": 3.53,
+                "end": 3.93
+              },
+              {
+                "text": "from",
+                "start": 3.98,
+                "end": 4.105
+              },
+              {
+                "text": "ours",
+                "start": 4.155,
+                "end": 4.705000000000001,
+                "breakAfter": "."
+              },
+              {
+                "text": "Follow",
+                "start": 4.855,
+                "end": 5.155
+              },
+              {
+                "text": "for",
+                "start": 5.205000000000001,
+                "end": 5.330000000000001
+              },
+              {
+                "text": "one",
+                "start": 5.405,
+                "end": 5.580000000000001
+              },
+              {
+                "text": "new",
+                "start": 5.630000000000001,
+                "end": 5.73
+              },
+              {
+                "text": "idea",
+                "start": 5.78,
+                "end": 6.180000000000001
+              },
+              {
+                "text": "every",
+                "start": 6.23,
+                "end": 6.48
+              },
+              {
+                "text": "day",
+                "start": 6.53,
+                "end": 7.03,
+                "breakAfter": "."
+              }
+            ],
+            "timing": "provider"
+          }
+        ],
+        "narration": "audio/narration.wav",
+        "timeline": {
+          "scenes": [
+            {
+              "index": 0,
+              "audioStart": 0.25,
+              "audioDuration": 5.975,
+              "clipDuration": 6.565,
+              "cutIn": 0
+            },
+            {
+              "index": 1,
+              "audioStart": 6.505,
+              "audioDuration": 7.325,
+              "clipDuration": 8.004999999999999,
+              "cutIn": 6.365
+            },
+            {
+              "index": 2,
+              "audioStart": 14.11,
+              "audioDuration": 7.035,
+              "clipDuration": 7.715000000000002,
+              "cutIn": 13.969999999999999
+            },
+            {
+              "index": 3,
+              "audioStart": 21.425,
+              "audioDuration": 7.6,
+              "clipDuration": 8.279999999999998,
+              "cutIn": 21.285
+            },
+            {
+              "index": 4,
+              "audioStart": 29.305,
+              "audioDuration": 6.225,
+              "clipDuration": 6.905000000000003,
+              "cutIn": 29.165
+            },
+            {
+              "index": 5,
+              "audioStart": 35.81,
+              "audioDuration": 7.17,
+              "clipDuration": 8.510000000000002,
+              "cutIn": 35.67
+            }
+          ],
+          "transitionOffsets": [
+            6.165,
+            13.77,
+            21.085,
+            28.965,
+            35.47
+          ],
+          "transitionDuration": 0.4,
+          "total": 43.980000000000004,
+          "leadIn": 0.25,
+          "tail": 1
+        },
+        "words": [
+          {
+            "text": "Octopuses",
+            "start": 0.335,
+            "end": 1.06
+          },
+          {
+            "text": "have",
+            "start": 1.11,
+            "end": 1.235
+          },
+          {
+            "text": "a",
+            "start": 1.26,
+            "end": 1.2850000000000001
+          },
+          {
+            "text": "central",
+            "start": 1.36,
+            "end": 1.7100000000000002
+          },
+          {
+            "text": "brain",
+            "start": 1.76,
+            "end": 2.385,
+            "breakAfter": ","
+          },
+          {
+            "text": "but",
+            "start": 2.4850000000000003,
+            "end": 2.585
+          },
+          {
+            "text": "they",
+            "start": 2.6100000000000003,
+            "end": 2.71
+          },
+          {
+            "text": "also",
+            "start": 2.76,
+            "end": 3.1100000000000003
+          },
+          {
+            "text": "have",
+            "start": 3.16,
+            "end": 3.285
+          },
+          {
+            "text": "a",
+            "start": 3.3100000000000005,
+            "end": 3.335
+          },
+          {
+            "text": "cluster",
+            "start": 3.385,
+            "end": 3.71
+          },
+          {
+            "text": "of",
+            "start": 3.7350000000000003,
+            "end": 3.785
+          },
+          {
+            "text": "neurons",
+            "start": 3.835,
+            "end": 4.435
+          },
+          {
+            "text": "in",
+            "start": 4.51,
+            "end": 4.61
+          },
+          {
+            "text": "each",
+            "start": 4.685,
+            "end": 4.885
+          },
+          {
+            "text": "of",
+            "start": 4.91,
+            "end": 4.96
+          },
+          {
+            "text": "their",
+            "start": 4.985,
+            "end": 5.135
+          },
+          {
+            "text": "eight",
+            "start": 5.21,
+            "end": 5.385
+          },
+          {
+            "text": "arms",
+            "start": 5.4350000000000005,
+            "end": 6.085,
+            "breakAfter": "."
+          },
+          {
+            "text": "Roughly",
+            "start": 6.59,
+            "end": 6.965
+          },
+          {
+            "text": "500",
+            "start": 7.0649999999999995,
+            "end": 7.715
+          },
+          {
+            "text": "million",
+            "start": 7.765,
+            "end": 8.065
+          },
+          {
+            "text": "neurons",
+            "start": 8.115,
+            "end": 8.565000000000001
+          },
+          {
+            "text": "power",
+            "start": 8.64,
+            "end": 8.915
+          },
+          {
+            "text": "them",
+            "start": 8.940000000000001,
+            "end": 9.49,
+            "breakAfter": "."
+          },
+          {
+            "text": "About",
+            "start": 9.665,
+            "end": 9.865
+          },
+          {
+            "text": "two-thirds",
+            "start": 9.915,
+            "end": 10.39
+          },
+          {
+            "text": "of",
+            "start": 10.415,
+            "end": 10.465
+          },
+          {
+            "text": "those",
+            "start": 10.515,
+            "end": 10.815
+          },
+          {
+            "text": "are",
+            "start": 10.865,
+            "end": 10.94
+          },
+          {
+            "text": "in",
+            "start": 10.965,
+            "end": 11.015
+          },
+          {
+            "text": "their",
+            "start": 11.04,
+            "end": 11.165
+          },
+          {
+            "text": "limbs",
+            "start": 11.215,
+            "end": 11.74,
+            "breakAfter": ","
+          },
+          {
+            "text": "which",
+            "start": 11.84,
+            "end": 12.015
+          },
+          {
+            "text": "act",
+            "start": 12.09,
+            "end": 12.315000000000001
+          },
+          {
+            "text": "semi-independently",
+            "start": 12.415,
+            "end": 13.690000000000001,
+            "breakAfter": "."
+          },
+          {
+            "text": "Every",
+            "start": 14.205,
+            "end": 14.455
+          },
+          {
+            "text": "sucker",
+            "start": 14.53,
+            "end": 14.805
+          },
+          {
+            "text": "can",
+            "start": 14.855,
+            "end": 14.93
+          },
+          {
+            "text": "taste",
+            "start": 14.98,
+            "end": 15.305
+          },
+          {
+            "text": "what",
+            "start": 15.33,
+            "end": 15.405
+          },
+          {
+            "text": "it",
+            "start": 15.43,
+            "end": 15.48
+          },
+          {
+            "text": "touches",
+            "start": 15.53,
+            "end": 16.355,
+            "breakAfter": "."
+          },
+          {
+            "text": "This",
+            "start": 16.53,
+            "end": 16.68
+          },
+          {
+            "text": "lets",
+            "start": 16.73,
+            "end": 16.905
+          },
+          {
+            "text": "them",
+            "start": 16.93,
+            "end": 17.08
+          },
+          {
+            "text": "solve",
+            "start": 17.155,
+            "end": 17.43
+          },
+          {
+            "text": "puzzles",
+            "start": 17.48,
+            "end": 18.03,
+            "breakAfter": ","
+          },
+          {
+            "text": "open",
+            "start": 18.155,
+            "end": 18.455
+          },
+          {
+            "text": "jars",
+            "start": 18.505,
+            "end": 19.055,
+            "breakAfter": ","
+          },
+          {
+            "text": "and",
+            "start": 19.155,
+            "end": 19.23
+          },
+          {
+            "text": "navigate",
+            "start": 19.28,
+            "end": 19.755
+          },
+          {
+            "text": "complex",
+            "start": 19.805,
+            "end": 20.255
+          },
+          {
+            "text": "mazes",
+            "start": 20.305,
+            "end": 21.005,
+            "breakAfter": "."
+          },
+          {
+            "text": "In",
+            "start": 21.51,
+            "end": 21.61
+          },
+          {
+            "text": "2016",
+            "start": 21.66,
+            "end": 22.96,
+            "breakAfter": ","
+          },
+          {
+            "text": "Inky",
+            "start": 23.085,
+            "end": 23.485
+          },
+          {
+            "text": "the",
+            "start": 23.51,
+            "end": 23.585
+          },
+          {
+            "text": "octopus",
+            "start": 23.66,
+            "end": 24.16
+          },
+          {
+            "text": "famously",
+            "start": 24.235,
+            "end": 24.685000000000002
+          },
+          {
+            "text": "escaped",
+            "start": 24.735,
+            "end": 25.16
+          },
+          {
+            "text": "a",
+            "start": 25.185000000000002,
+            "end": 25.21
+          },
+          {
+            "text": "New",
+            "start": 25.26,
+            "end": 25.385
+          },
+          {
+            "text": "Zealand",
+            "start": 25.435000000000002,
+            "end": 25.71
+          },
+          {
+            "text": "aquarium",
+            "start": 25.735,
+            "end": 26.46
+          },
+          {
+            "text": "by",
+            "start": 26.535,
+            "end": 26.685000000000002
+          },
+          {
+            "text": "squeezing",
+            "start": 26.76,
+            "end": 27.26
+          },
+          {
+            "text": "through",
+            "start": 27.335,
+            "end": 27.535
+          },
+          {
+            "text": "a",
+            "start": 27.585,
+            "end": 27.635
+          },
+          {
+            "text": "narrow",
+            "start": 27.71,
+            "end": 28.035
+          },
+          {
+            "text": "drainpipe",
+            "start": 28.085,
+            "end": 28.885,
+            "breakAfter": "."
+          },
+          {
+            "text": "They",
+            "start": 29.365,
+            "end": 29.465
+          },
+          {
+            "text": "can",
+            "start": 29.515,
+            "end": 29.615
+          },
+          {
+            "text": "instantly",
+            "start": 29.69,
+            "end": 30.09
+          },
+          {
+            "text": "change",
+            "start": 30.14,
+            "end": 30.515
+          },
+          {
+            "text": "color",
+            "start": 30.59,
+            "end": 30.965
+          },
+          {
+            "text": "and",
+            "start": 31.015,
+            "end": 31.09
+          },
+          {
+            "text": "texture",
+            "start": 31.14,
+            "end": 31.564999999999998
+          },
+          {
+            "text": "to",
+            "start": 31.615000000000002,
+            "end": 31.665
+          },
+          {
+            "text": "camouflage",
+            "start": 31.715,
+            "end": 32.59,
+            "breakAfter": ","
+          },
+          {
+            "text": "yet",
+            "start": 32.715,
+            "end": 32.84
+          },
+          {
+            "text": "most",
+            "start": 32.89,
+            "end": 33.09
+          },
+          {
+            "text": "species",
+            "start": 33.14,
+            "end": 33.59
+          },
+          {
+            "text": "live",
+            "start": 33.64,
+            "end": 33.94
+          },
+          {
+            "text": "only",
+            "start": 33.99,
+            "end": 34.215
+          },
+          {
+            "text": "1",
+            "start": 34.29,
+            "end": 34.465
+          },
+          {
+            "text": "to",
+            "start": 34.515,
+            "end": 34.59
+          },
+          {
+            "text": "2",
+            "start": 34.64,
+            "end": 34.765
+          },
+          {
+            "text": "years",
+            "start": 34.815,
+            "end": 35.39,
+            "breakAfter": "."
+          },
+          {
+            "text": "They",
+            "start": 35.89,
+            "end": 35.99
+          },
+          {
+            "text": "learn",
+            "start": 36.04,
+            "end": 36.190000000000005
+          },
+          {
+            "text": "alone",
+            "start": 36.24,
+            "end": 36.715,
+            "breakAfter": ","
+          },
+          {
+            "text": "without",
+            "start": 36.815000000000005,
+            "end": 37.065000000000005
+          },
+          {
+            "text": "parents",
+            "start": 37.115,
+            "end": 37.865,
+            "breakAfter": "."
+          },
+          {
+            "text": "This",
+            "start": 38.015,
+            "end": 38.165
+          },
+          {
+            "text": "intelligence",
+            "start": 38.215,
+            "end": 38.84
+          },
+          {
+            "text": "evolved",
+            "start": 38.89,
+            "end": 39.265
+          },
+          {
+            "text": "separately",
+            "start": 39.34,
+            "end": 39.74
+          },
+          {
+            "text": "from",
+            "start": 39.79,
+            "end": 39.915000000000006
+          },
+          {
+            "text": "ours",
+            "start": 39.965,
+            "end": 40.515,
+            "breakAfter": "."
+          },
+          {
+            "text": "Follow",
+            "start": 40.665000000000006,
+            "end": 40.965
+          },
+          {
+            "text": "for",
+            "start": 41.015,
+            "end": 41.14
+          },
+          {
+            "text": "one",
+            "start": 41.215,
+            "end": 41.39
+          },
+          {
+            "text": "new",
+            "start": 41.440000000000005,
+            "end": 41.540000000000006
+          },
+          {
+            "text": "idea",
+            "start": 41.59,
+            "end": 41.99
+          },
+          {
+            "text": "every",
+            "start": 42.040000000000006,
+            "end": 42.290000000000006
+          },
+          {
+            "text": "day",
+            "start": 42.34,
+            "end": 42.84,
+            "breakAfter": "."
+          }
+        ],
+        "attempts": [
+          {
+            "provider": "kokoro",
+            "ok": true
+          }
+        ]
+      }
+    },
+    "visuals": {
+      "status": "done",
+      "attempts": 1,
+      "startedAt": "2026-11-20T05:47:31.133Z",
+      "finishedAt": "2026-11-20T05:47:40.602Z",
+      "durationMs": 9469,
+      "data": {
+        "theme": "ocean",
+        "scenes": [
+          {
+            "index": 0,
+            "provider": "designed",
+            "bg": "visuals/scene-00-bg.png",
+            "fg": "visuals/scene-00-fg.png",
+            "bgWidth": 1210,
+            "bgHeight": 2150
+          },
+          {
+            "index": 1,
+            "provider": "designed",
+            "bg": "visuals/scene-01-bg.png",
+            "fg": "visuals/scene-01-fg.png",
+            "bgWidth": 1210,
+            "bgHeight": 2150
+          },
+          {
+            "index": 2,
+            "provider": "designed",
+            "bg": "visuals/scene-02-bg.png",
+            "fg": "visuals/scene-02-fg.png",
+            "bgWidth": 1210,
+            "bgHeight": 2150
+          },
+          {
+            "index": 3,
+            "provider": "designed",
+            "bg": "visuals/scene-03-bg.png",
+            "fg": "visuals/scene-03-fg.png",
+            "bgWidth": 1210,
+            "bgHeight": 2150
+          },
+          {
+            "index": 4,
+            "provider": "designed",
+            "bg": "visuals/scene-04-bg.png",
+            "fg": "visuals/scene-04-fg.png",
+            "bgWidth": 1210,
+            "bgHeight": 2150
+          },
+          {
+            "index": 5,
+            "provider": "designed",
+            "bg": "visuals/scene-05-bg.png",
+            "fg": "visuals/scene-05-fg.png",
+            "bgWidth": 1210,
+            "bgHeight": 2150
+          }
+        ],
+        "imagesByProvider": {
+          "designed": 6
+        }
+      }
+    },
+    "captions": {
+      "status": "done",
+      "attempts": 1,
+      "startedAt": "2026-11-20T05:47:40.605Z",
+      "finishedAt": "2026-11-20T05:47:40.609Z",
+      "durationMs": 4,
+      "data": {
+        "ass": "captions.ass",
+        "srt": "captions.srt",
+        "words": 107
+      }
+    },
+    "render": {
+      "status": "done",
+      "attempts": 1,
+      "startedAt": "2026-11-20T06:01:40.073Z",
+      "finishedAt": "2026-11-20T06:02:47.807Z",
+      "durationMs": 67734,
+      "data": {
+        "video": "output/why-are-octopuses-so-smart.mp4",
+        "audio": "audio/final.wav",
+        "duration": 43.96,
+        "sizeBytes": 9801559,
+        "music": "/home/user/portfolio/ai-video-factory/jobs/20261120-0543-short-why-octopuses-are-so-smart-85a8/audio/music.wav",
+        "loudness": {
+          "inputLufs": -22.78,
+          "targetLufs": -14
+        },
+        "encodeMs": 64240,
+        "qa": {
+          "integratedLufs": -14,
+          "truePeakDb": -1.4,
+          "blackSegments": [],
+          "passed": true,
+          "issues": []
+        }
+      }
+    },
+    "thumbnail": {
+      "status": "done",
+      "attempts": 1,
+      "startedAt": "2026-11-20T06:02:47.808Z",
+      "finishedAt": "2026-11-20T06:02:50.516Z",
+      "durationMs": 2708,
+      "data": {
+        "thumbnail": "output/thumbnail.png",
+        "cover": "output/cover.png"
+      }
+    },
+    "publish": {
+      "status": "skipped",
+      "attempts": 0
+    }
+  },
+  "outputs": {
+    "video": "output/why-are-octopuses-so-smart.mp4",
+    "thumbnail": "output/thumbnail.png",
+    "cover": "output/cover.png",
+    "captionsAss": "captions.ass",
+    "captionsSrt": "captions.srt",
+    "script": "script.json"
+  },
+  "error": "[gemini-llm] HTTP 429: [{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/docs/rate-limits. To monitor your current",
+  "providers": {
+    "llm": "gemini-3-flash-preview",
+    "tts": "kokoro",
+    "voice": "kokoro:af_heart",
+    "wordTimings": "provider",
+    "visuals": {
+      "designed": 6
+    },
+    "ttsAttempts": [
+      {
+        "provider": "kokoro",
+        "ok": true
+      }
+    ]
+  },
+  "cost": {
+    "llmUsd": 0.008,
+    "ttsUsd": 0,
+    "imagesUsd": 0,
+    "totalUsd": 0.008,
+    "notes": [
+      "Kokoro runs locally: $0 API cost (CPU time only)"
+    ]
+  }
+}
