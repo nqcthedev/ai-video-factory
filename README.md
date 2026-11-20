@@ -239,4 +239,4 @@ MIT for the code (see [LICENSE](LICENSE)). The bundled Inter fonts are under the
 
 ---
 
-Built by Cuong Nguyen — AI automation & video developer. Available for hire on Fiverr: https://www.fiverr.com/cuongnqxx
+Built by NQC The Dev — AI automation & video developer. Available for hire on Fiverr: https://www.fiverr.com/cuongnqxx
