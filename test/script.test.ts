@@ -26,7 +26,9 @@ function validShort() {
   const s = sampleScript();
   const words = "Octopuses can open jars, escape tanks and recognise faces, and scientists are still working out exactly how they manage it".split(" ");
   const narr = (n: number) => words.slice(0, n).join(" ") + ".";
-  return { ...s, hook: { ...s.hook, narration: narr(16) }, scenes: s.scenes.map((sc) => ({ ...sc, narration: narr(16) })) };
+  const scenes = s.scenes.map((sc) => ({ ...sc, narration: narr(16) }));
+  scenes[scenes.length - 1]!.narration = `${narr(10)} ${channel.callToAction}`;
+  return { ...s, hook: { ...s.hook, narration: narr(16) }, scenes };
 }
 
 describe("script schema & validation", () => {
@@ -107,5 +109,28 @@ describe("generateScript retry loop", () => {
   it("fails when no attempt is even schema-valid", async () => {
     const llm = fakeLlm(["{}", "{}"]);
     await expect(generateScript(llm, { topic: "x", format: FORMATS.short, channel, maxAttempts: 2 })).rejects.toThrow(/valid script/);
+  });
+});
+
+describe("schema tolerance", () => {
+  it("hoists visual fields the model put on the scene", () => {
+    const s = sampleScript() as unknown as Record<string, any>;
+    const scene = s.scenes[1];
+    const raw = { ...s, scenes: [{ narration: scene.narration, keyword: "STEPS", points: ["a", "b"], visual: { ...scene.visual, layout: "list", points: undefined } }, ...s.scenes.slice(1)] };
+    const parsed = ScriptSchema.parse(JSON.parse(JSON.stringify(raw)));
+    expect(parsed.scenes[0]!.visual.points).toEqual(["a", "b"]);
+  });
+});
+
+describe("call to action placement", () => {
+  it("requires the CTA in the last scene only", () => {
+    const s = validShort();
+    s.scenes[s.scenes.length - 1]!.narration = "A closing line without the call.";
+    expect(validateScript(s, FORMATS.short, "Follow for more.").join()).toMatch(/must end with the call to action/);
+    s.scenes[2]!.narration += " Follow for more.";
+    expect(validateScript(s, FORMATS.short, "Follow for more.").join()).toMatch(/LAST scene only/);
+    s.scenes[2]!.narration = s.scenes[2]!.narration.replace(" Follow for more.", "");
+    s.scenes[s.scenes.length - 1]!.narration += " Follow for more!";
+    expect(validateScript(s, FORMATS.short, "Follow for more.")).toEqual([]);
   });
 });

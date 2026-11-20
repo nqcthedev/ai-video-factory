@@ -1,5 +1,5 @@
-import { copyFileSync, existsSync } from "node:fs";
-import type { LoadedConfig } from "./config/load.js";
+import { copyFileSync, existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { type LoadedConfig, parseConfig } from "./config/load.js";
 import type { FormatName } from "./config/schema.js";
 import { estimateCost } from "./core/cost.js";
 import { Job, type JobOptions, slugify } from "./core/job.js";
@@ -46,7 +46,9 @@ export function createJob(loaded: LoadedConfig, req: MakeRequest, log: Logger): 
 
 /** Run (or resume) every stage of a job. Completed stages are read from the manifest, not redone. */
 export async function runPipeline(job: Job, loaded: LoadedConfig, deps: PipelineDeps = {}): Promise<PipelineResult> {
-  const cfg = job.manifest.config; // snapshot: resume uses the settings the job started with
+  // Snapshot: resume uses the settings the job started with (re-validated so options added in
+  // newer versions get their defaults).
+  const cfg = parseConfig(job.manifest.config, `${job.manifest.id}/manifest.json config`);
   const env = loaded.env;
   const format = FORMATS[job.manifest.format];
   const renderer = deps.renderer ?? new HtmlRenderer();
@@ -64,6 +66,10 @@ export async function runPipeline(job: Job, loaded: LoadedConfig, deps: Pipeline
         brief: job.manifest.options.brief,
         maxAttempts: cfg.llm.maxAttempts,
         logger: job.log,
+        onCompletion: (n, text) => {
+          mkdirSync(job.path("llm"), { recursive: true });
+          writeFileSync(job.path(`llm/script-attempt-${n}.json`), text);
+        },
       });
       job.writeJson("script.json", r.script);
       return { file: "script.json", attempts: r.attempts, usage: r.usage, model: r.model, warnings: r.warnings };
@@ -202,7 +208,8 @@ export function exportJob(job: Job, dest: string, name: string): string[] {
   for (const [key, rel] of Object.entries(job.manifest.outputs)) {
     if (!existsSync(job.path(rel))) continue;
     const ext = rel.split(".").pop();
-    const target = `${dest}/${name}${key === "video" ? "" : `.${key}`}.${ext}`;
+    const suffix = key === "video" ? "" : `.${key.replace(/^captions(Ass|Srt)$/, "captions")}`;
+    const target = `${dest}/${name}${suffix}.${ext}`;
     copyFileSync(job.path(rel), target);
     out.push(target);
   }

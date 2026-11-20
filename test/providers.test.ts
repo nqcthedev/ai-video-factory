@@ -160,3 +160,24 @@ describe("visual providers (mocked HTTP)", () => {
     expect(JSON.parse(String(f.calls[0]!.init!.body))).toMatchObject({ model: "gemini-2.5-flash-image", response_format: "b64_json" });
   });
 });
+
+describe("LLM model fallback", () => {
+  it("moves to the next model when the daily quota is exhausted and remembers it", async () => {
+    const { createLlmClient } = await import("../src/llm/client.js");
+    const f = mockFetch([{
+      match: (u) => u.endsWith("/chat/completions"),
+      respond: (_u, init) => {
+        const model = JSON.parse(String(init!.body)).model;
+        if (model === "gemini-2.5-flash") return json([{ error: { code: 429, message: "Quota exceeded ... limit: 20 ... Please retry in 2h16m15.5s." } }], 429);
+        return json({ choices: [{ message: { content: "{}" } }], usage: { prompt_tokens: 5, completion_tokens: 2 }, model });
+      },
+    }]);
+    const llm = createLlmClient(ConfigSchema.parse({}).llm, env, { fetch: f, sleep: noSleep });
+    const r1 = await llm.chat([{ role: "user", content: "hi" }]);
+    expect(r1.model).toBe("gemini-3-flash-preview");
+    await llm.chat([{ role: "user", content: "again" }]);
+    const models = f.calls.map((c) => JSON.parse(String(c.init!.body)).model);
+    expect(models).toEqual(["gemini-2.5-flash", "gemini-3-flash-preview", "gemini-3-flash-preview"]);
+    expect(new Headers(f.calls[0]!.init!.headers).get("authorization")).toBe("Bearer g");
+  });
+});

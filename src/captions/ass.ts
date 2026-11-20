@@ -94,8 +94,20 @@ export function chunkWords(words: CaptionWord[], maxWords: number, maxChars: num
       }
     }
   }
+  // Don't end a chunk on a weak word ("THROUGH A" / "DRAIN PIPE"): push it to the next chunk.
+  for (let i = 0; i < chunks.length - 1; i++) {
+    const c = chunks[i]!;
+    const n = chunks[i + 1]!;
+    const last = c[c.length - 1]!;
+    if (c.length > 1 && !last.breakAfter && WEAK.has(last.text.toLowerCase()) && n.length < maxWords && len([last, ...n]) <= maxChars) {
+      chunks[i] = c.slice(0, -1);
+      chunks[i + 1] = [last, ...n];
+    }
+  }
   return chunks.map((ws) => ({ words: ws, start: ws[0]!.start, end: ws[ws.length - 1]!.end }));
 }
+
+const WEAK = new Set(["a", "an", "the", "of", "to", "in", "on", "at", "for", "and", "or", "but", "with", "by", "from", "its", "their", "your", "our", "my", "is", "are", "was"]);
 
 /** Split into k contiguous groups with sizes differing by at most one (larger groups first). */
 function evenSplit<T>(items: T[], k: number): T[][] {

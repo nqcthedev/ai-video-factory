@@ -45,7 +45,10 @@ describe("ffmpeg command building", () => {
     expect(graph).toContain("crop=1080:1920");
     expect(graph).toContain(`xfade=transition=smoothleft:duration=${tl.transitionDuration.toFixed(3)}:offset=${tl.transitionOffsets[0]!.toFixed(3)}`);
     expect(graph).toContain("subtitles=filename='/j/captions.ass':fontsdir='/repo/assets/fonts'");
-    expect(graph).toMatch(/fade=t=out:st=/);
+    expect(graph).not.toMatch(/fade=t=out/); // vertical shorts loop: no fade to black
+    expect(graph).toContain("[fg0]"); // first scene: graphics visible from frame 0
+    expect(graph).not.toMatch(/\[1:v\][^;]*fade=t=in/);
+    expect(graph).toMatch(/\[3:v\][^;]*fade=t=in/);
     expect(args).toContain("+faststart");
     expect(args.slice(-1)[0]).toBe("/j/out.mp4");
     expect(args[args.indexOf("-map") + 1]).toBe("[vout]");
@@ -79,5 +82,13 @@ describe("procedural music", () => {
     expect(a).toEqual(b);
     const peak = a.reduce((m, v) => Math.max(m, Math.abs(v)), 0);
     expect(peak).toBeCloseTo(0.5, 2);
+  });
+});
+
+describe("output QA parsing", () => {
+  it("reads loudness summary and black segments", async () => {
+    const { parseQa } = await import("../src/render/ffmpeg.js");
+    const stderr = "[blackdetect @ 0x1] black_start:0 black_end:0.4 black_duration:0.4\n[Parsed_ebur128_0 @ 0x2] Summary:\n\n  Integrated loudness:\n    I:         -14.0 LUFS\n    Threshold: -24.1 LUFS\n\n  True peak:\n    Peak:       -1.6 dBFS\n";
+    expect(parseQa(stderr)).toEqual({ integratedLufs: -14, truePeakDb: -1.6, blackSegments: [{ start: 0, end: 0.4 }] });
   });
 });

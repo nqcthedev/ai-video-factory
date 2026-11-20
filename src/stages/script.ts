@@ -44,12 +44,27 @@ const Visual = z.object({
   points: z.array(z.string().min(1).max(32)).max(3).optional(),
 });
 
-export const SceneSchema = z.object({
-  narration: z.string().min(8).max(420),
-  keyword: z.string().min(1).max(26),
-  subtitle: z.string().max(64).optional().default(""),
-  visual: Visual,
-});
+/** Models sometimes put `points`/`layout`/`icon` next to `visual` instead of inside it — accept both. */
+function hoistVisualFields(raw: unknown): unknown {
+  if (!raw || typeof raw !== "object") return raw;
+  const scene = { ...(raw as Record<string, unknown>) };
+  const visual = { ...((scene.visual as Record<string, unknown>) ?? {}) };
+  for (const k of ["points", "layout", "icon", "description", "searchQuery"]) {
+    if (scene[k] !== undefined && visual[k] === undefined) visual[k] = scene[k];
+    delete scene[k];
+  }
+  return { ...scene, visual };
+}
+
+export const SceneSchema = z.preprocess(
+  hoistVisualFields,
+  z.object({
+    narration: z.string().min(8).max(420),
+    keyword: z.string().min(1).max(26),
+    subtitle: z.string().max(64).optional().default(""),
+    visual: Visual,
+  }),
+);
 
 export const ScriptSchema = z.object({
   title: z.string().min(8).max(100),
@@ -61,8 +76,8 @@ export const ScriptSchema = z.object({
   scenes: z.array(SceneSchema).min(3).max(14),
 });
 
-export type Scene = z.infer<typeof SceneSchema>;
-export type Script = z.infer<typeof ScriptSchema>;
+export type Scene = z.output<typeof SceneSchema>;
+export type Script = z.output<typeof ScriptSchema>;
 
 /** Hook first, then the body scenes — the order everything downstream uses. */
 export function allScenes(s: Script): Scene[] {
@@ -76,13 +91,23 @@ export function countWords(text: string): number {
 const EMOJI = /\p{Extended_Pictographic}/u;
 
 /** Checks the schema can't express: word budget, scene count, YouTube limits, on-screen text sizes. */
-export function validateScript(script: Script, format: FormatSpec): string[] {
+export function validateScript(script: Script, format: FormatSpec, callToAction?: string): string[] {
   const problems: string[] = [];
   const scenes = allScenes(script);
+  if (callToAction) {
+    const norm = (t: string) => t.toLowerCase().replace(/[^a-z0-9 ]/g, "").replace(/\s+/g, " ").trim();
+    const cta = norm(callToAction);
+    const at = scenes.findIndex((s) => norm(s.narration).includes(cta));
+    if (at !== scenes.length - 1)
+      problems.push(at < 0 ? `The last scene must end with the call to action: "${callToAction}".` : `The call to action must be in the LAST scene only (found in scene ${at}). Move it to the end.`);
+  }
   const words = scenes.reduce((a, s) => a + countWords(s.narration), 0);
   const [minW, maxW] = format.words;
-  if (words < Math.floor(minW * 0.9)) problems.push(`Narration is too short: ${words} words in total, need ${minW}-${maxW}. Add substance, not filler.`);
-  if (words > Math.ceil(maxW * 1.05)) problems.push(`Narration is too long: ${words} words in total, need ${minW}-${maxW}. Cut the weakest sentences.`);
+  const perScene = scenes.map((s, i) => `${i === 0 ? "hook" : `scenes[${i - 1}]`}=${countWords(s.narration)}`).join(", ");
+  if (words < Math.floor(minW * 0.95))
+    problems.push(`Narration is too short: ${words} words in total, need ${minW}-${maxW}. Add about ${minW - words + 5} words of substance (a concrete example), not filler. Per scene now: ${perScene}.`);
+  if (words > Math.ceil(maxW * 1.05))
+    problems.push(`Narration is too long: ${words} words in total, need ${minW}-${maxW}. Remove about ${words - maxW + 5} words: shorten every scene to ${Math.floor(maxW / scenes.length)} words or fewer, or drop the weakest scene. Per scene now: ${perScene}.`);
   const [minS, maxS] = format.scenes;
   if (scenes.length < minS || scenes.length > maxS) problems.push(`Use ${minS}-${maxS} scenes in total (hook + scenes); got ${scenes.length}.`);
   if (script.title.length > 70) problems.push(`Title must be at most 70 characters (got ${script.title.length}).`);
@@ -128,16 +153,17 @@ export function buildPrompt(topic: string, format: FormatSpec, channel: AppConfi
     `You are the head writer of the faceless YouTube channel "${channel.name}" (${channel.niche}).`,
     `Tone: ${channel.tone}. Audience: ${channel.audience}. Language: ${channel.language}.`,
     "You write tight, factual, highly watchable narration scripts for AI voice-over. You only state well-established facts;",
-    "when a number is uncertain you round it and say 'about' or 'roughly'. Never invent studies, quotes or statistics.",
+    "when a number is uncertain you round it and say 'about' or 'roughly'. Never invent studies, quotes, percentages or statistics:",
+    "only use numbers from the producer's brief or textbook-level facts. A 'stat' scene may use a duration, count or size instead of a percentage.",
     "Respond with ONE JSON object only, no markdown fences, no commentary.",
   ].join(" ");
   const user = `Write a ${isShort ? "vertical Short (9:16)" : "horizontal YouTube video (16:9)"} about: "${topic}".
 ${brief ? `Brief from the producer: ${brief}\n` : ""}
-LENGTH: ${format.words[0]}-${format.words[1]} spoken words in total (about ${seconds}). ${format.scenes[0]}-${format.scenes[1]} scenes in total, counting the hook.
+LENGTH: ${format.words[0]}-${format.words[1]} spoken words in total (about ${seconds}) — this is a hard limit, count them. ${format.scenes[0]}-${format.scenes[1]} scenes in total, counting the hook, so roughly ${Math.round(format.words[1] / format.scenes[1])}-${Math.round(format.words[1] / format.scenes[0])} words per scene.
 
 STRUCTURE
 - "hook": the first 2-3 seconds. One or two short sentences that create curiosity with a concrete, surprising fact or a direct question. Never start with "In this video", "Did you know" or "Have you ever".
-- "scenes": each scene is ONE idea, 1-3 sentences, ${isShort ? "12-22" : "15-28"} words. Build up: explain the why, give a vivid concrete example (a real experiment, a real-life situation, a number the viewer can picture), then a payoff. Each scene should make the viewer want the next one (open loops, "but here's the twist").
+- "scenes": each scene is ONE idea, 1-3 sentences. Build up: explain the why, give a vivid concrete example (a real experiment, a real-life situation, a number the viewer can picture), then a payoff. Each scene should make the viewer want the next one (open loops, "but here's the twist").
 - Talk to the viewer ("you"), keep it conversational and specific. No generic filler like "truly remarkable", "fascinating world", "in conclusion".
 - The last scene wraps up with a memorable takeaway and ends with this call to action, said naturally: "${channel.callToAction}"
 - Write for the ear: short sentences, contractions, no lists read aloud, no parentheses, no emojis, no hashtags in narration. Numbers as digits (e.g. 500 million, 3).
@@ -145,7 +171,7 @@ STRUCTURE
 ON-SCREEN TEXT (per scene)
 - "keyword": the big text on screen, 1-3 words, max 18 characters, punchy (e.g. "9 BRAINS", "BLUE BLOOD", "JUST 5 MINUTES").
 - "subtitle": a supporting line of max 7 words that adds information, not a repeat of the keyword.
-- "visual.layout": "stat" when the keyword is a number (keyword must contain the number, e.g. "500M", "2/3", "90%"), "list" for 2-3 parallel items (then give "visual.points", each max 24 characters), "quote" for a punchline or takeaway, otherwise "hero". Use at least 3 different layouts across the video, including at least one "stat" and one "list".
+- "visual.layout": "stat" when the keyword is a number (keyword must contain the number, e.g. "500M", "2/3", "90%"), "list" for 2-3 parallel items (then "visual.points" MUST contain the 2-3 items, each max 24 characters, and the narration must actually say every item — never announce "three steps" without naming them), "quote" for a punchline or takeaway, otherwise "hero". Use at least 3 different layouts across the video, including at least one "stat" and one "list".
 - "visual.icon": one Lucide icon name that fits, preferably from: ${SUGGESTED_ICONS.join(", ")}.
 - "visual.description": a concrete photographic shot for an AI image model (subject, setting, lighting, camera), no text in the image.
 - "visual.searchQuery": 2-4 words for a stock photo search.
@@ -193,7 +219,16 @@ export interface ScriptResult {
  */
 export async function generateScript(
   llm: LlmClient,
-  args: { topic: string; format: FormatSpec; channel: AppConfig["channel"]; brief?: string; maxAttempts: number; logger?: Logger },
+  args: {
+    topic: string;
+    format: FormatSpec;
+    channel: AppConfig["channel"];
+    brief?: string;
+    maxAttempts: number;
+    logger?: Logger;
+    /** Called with every raw completion (the pipeline keeps them in the job dir for debugging). */
+    onCompletion?: (attempt: number, text: string) => void;
+  },
 ): Promise<ScriptResult> {
   const log = args.logger ?? nullLogger;
   const messages = buildPrompt(args.topic, args.format, args.channel, args.brief);
@@ -202,6 +237,7 @@ export async function generateScript(
   let model = llm.model;
   for (let attempt = 1; attempt <= args.maxAttempts; attempt++) {
     const res = await llm.chat(messages, { json: true });
+    args.onCompletion?.(attempt, res.text);
     model = res.model;
     usage.promptTokens += res.usage.promptTokens;
     usage.completionTokens += res.usage.completionTokens;
@@ -212,7 +248,7 @@ export async function generateScript(
         feedback = "The JSON does not match the required shape:\n" + parsed.error.issues.slice(0, 12).map((i) => `- ${i.path.join(".")}: ${i.message}`).join("\n");
       } else {
         const script = normalizeScript(parsed.data);
-        const problems = validateScript(script, args.format);
+        const problems = validateScript(script, args.format, args.channel.callToAction);
         if (!problems.length) return { script, attempts: attempt, usage, model, warnings: [] };
         if (!best || problems.length < best.problems.length) best = { script, problems };
         feedback = "Please fix these problems:\n" + problems.map((p) => `- ${p}`).join("\n");

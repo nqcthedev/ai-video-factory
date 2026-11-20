@@ -172,7 +172,7 @@ function progress(o: FgOptions, vertical: boolean): string {
 
 /** Highlight the number part of a stat keyword ("500M" → accent number + white suffix). */
 function statMarkup(keyword: string): string {
-  const m = /^(.*?)([\d.,/]+)(.*)$/.exec(keyword.trim());
+  const m = /^(.*?)(\d[\d.,/]*(?:\s?[-–]\s?\d[\d.,/]*)?)(.*)$/.exec(keyword.trim());
   if (!m) return esc(keyword);
   return `${m[1] ? `<span class="aff">${esc(m[1].trim())}</span> ` : ""}<span class="num">${esc(m[2]!)}</span>${m[3] ? `<span class="aff">${esc(m[3])}</span>` : ""}`;
 }
@@ -193,7 +193,7 @@ export function foregroundHtml(o: FgOptions): string {
 .stage{position:absolute;display:flex;flex-direction:column;justify-content:center}
 .stage.v{left:80px;right:80px;top:270px;height:870px;align-items:center;text-align:center}
 .stage.h{left:120px;width:1060px;top:150px;height:720px;align-items:flex-start;text-align:left}
-.badge{width:${Math.round(220 * S)}px;height:${Math.round(220 * S)}px;border-radius:50%;display:grid;place-items:center;color:${t.accent};
+.badge{width:${Math.round((vertical ? 270 : 220) * S)}px;height:${Math.round((vertical ? 270 : 220) * S)}px;border-radius:50%;display:grid;place-items:center;color:${t.accent};
   background:radial-gradient(circle at 35% 30%, rgba(255,255,255,.20), rgba(255,255,255,.06) 60%);border:2px solid rgba(255,255,255,.22);
   box-shadow:0 0 0 14px rgba(255,255,255,.04), 0 0 90px ${t.accent}55, inset 0 2px 0 rgba(255,255,255,.25);margin-bottom:${Math.round(56 * S)}px}
 .h .badge{display:none}
@@ -202,17 +202,19 @@ export function foregroundHtml(o: FgOptions): string {
   box-shadow:0 0 0 22px rgba(255,255,255,.035), 0 0 0 46px rgba(255,255,255,.02), 0 0 140px ${t.accent}44, inset 0 2px 0 rgba(255,255,255,.25)}
 h1{font-family:"AVF Display";font-weight:900;font-size:${Math.round(178 * S)}px;line-height:.93;letter-spacing:-.025em;text-transform:uppercase;text-shadow:${shadow};max-width:100%}
 h1 .hl{color:${t.accent}}
+h1 .box{display:inline-block;color:${t.onAccent};background:${t.accent};padding:.02em .16em .06em;border-radius:.12em;text-shadow:none;transform:rotate(-2deg);box-shadow:0 18px 50px rgba(0,0,0,.35)}
+.boxed .badge{width:${Math.round(300 * S)}px;height:${Math.round(300 * S)}px}
 .rule{width:${Math.round(120 * S)}px;height:${Math.round(12 * S)}px;border-radius:12px;background:${t.accent};margin:${Math.round(40 * S)}px 0 ${Math.round(34 * S)}px;box-shadow:0 0 30px ${t.accent}88}
 .sub{font:600 ${Math.round((vertical ? 50 : 56) * S)}px/1.22 "AVF Text";color:rgba(255,255,255,.88);text-shadow:${shadow};max-width:${vertical ? 860 : 980}px}
 .stat .num{color:${t.accent};font-size:1.55em;letter-spacing:-.04em;text-shadow:0 0 60px ${t.accent}66, ${shadow}}
 .stat .aff{font-size:.9em}
 .stat h1{line-height:.9}
 .list h1{font-size:${Math.round(124 * S)}px}
-.rows{display:flex;flex-direction:column;gap:${Math.round(22 * S)}px;margin-top:${Math.round(46 * S)}px;width:${vertical ? "100%" : "940px"}}
+.rows{display:flex;flex-direction:column;gap:${Math.round(22 * S)}px;margin-top:${Math.round(46 * S)}px;width:${vertical ? "100%" : "960px"}}
 .row{display:flex;align-items:center;gap:${Math.round(28 * S)}px;padding:${Math.round(26 * S)}px ${Math.round(34 * S)}px;border-radius:${Math.round(30 * S)}px;text-align:left;
   background:linear-gradient(135deg, rgba(255,255,255,.13), rgba(255,255,255,.05));border:2px solid rgba(255,255,255,.16);box-shadow:0 14px 40px rgba(0,0,0,.25)}
-.row b{flex:none;width:${Math.round(76 * S)}px;height:${Math.round(76 * S)}px;border-radius:50%;display:grid;place-items:center;background:${t.accent};color:${t.onAccent};font:900 ${Math.round(40 * S)}px "AVF Display"}
-.row span{font:700 ${Math.round(52 * S)}px/1.15 "AVF Text";text-shadow:${shadow}}
+.row b{flex:none;width:${Math.round((vertical ? 76 : 84) * S)}px;height:${Math.round((vertical ? 76 : 84) * S)}px;border-radius:50%;display:grid;place-items:center;background:${t.accent};color:${t.onAccent};font:900 ${Math.round(40 * S)}px "AVF Display"}
+.row span{font:700 ${Math.round((vertical ? 52 : 62) * S)}px/1.15 "AVF Text";text-shadow:${shadow}}
 .quote .mark{font:900 ${Math.round(260 * S)}px/0.6 "AVF Display";color:${t.accent};height:${Math.round(120 * S)}px;text-shadow:0 0 50px ${t.accent}55}
 .quote h1{font-size:${Math.round(136 * S)}px;line-height:1}
 `;
@@ -233,11 +235,19 @@ h1 .hl{color:${t.accent}}
       inner = `<div class="mark">“</div><h1 data-fit data-maxw="${maxW}" data-maxh="${vertical ? 440 : 380}" data-min="60">${kw}</h1><div class="rule"></div>${sub}`;
       break;
     default:
+      if (o.index % 2 === 1) {
+        // Variant: last word on an accent "tape" box — breaks up runs of hero scenes.
+        const words = o.keyword.trim().split(/\s+/);
+        const last = words.pop()!;
+        const kwBoxed = `${words.length ? `${esc(words.join(" "))}<br>` : ""}<span class="box">${esc(last)}</span>`;
+        inner = `<h1 data-fit data-maxw="${maxW}" data-maxh="${vertical ? 460 : 400}" data-min="60" style="line-height:1.05">${kwBoxed}</h1><div class="rule" style="opacity:0"></div>${sub}`;
+        break;
+      }
       inner = `<h1 data-fit data-maxw="${maxW}" data-maxh="${vertical ? 440 : 380}" data-min="60">${kw}</h1><div class="rule"></div>${sub}`;
   }
-  const badge = `<div class="badge">${iconSvg(o.icon, { size: Math.round(112 * S), stroke: 1.75 })}</div>`;
+  const badge = `<div class="badge">${iconSvg(o.icon, { size: Math.round((vertical ? 138 : 112) * S), stroke: 1.75 })}</div>`;
   const side = vertical ? "" : `<div class="side">${iconSvg(o.icon, { size: 250, stroke: 1.5 })}</div>`;
-  const body = `${progress(o, vertical)}<div class="stage ${vertical ? "v" : "h"} ${o.layout}">${o.layout === "list" ? "" : badge}${inner}</div>${side}`;
+  const body = `${progress(o, vertical)}<div class="stage ${vertical ? "v" : "h"} ${o.layout}${o.layout === "hero" && o.index % 2 === 1 ? " boxed" : ""}">${o.layout === "list" ? "" : badge}${inner}</div>${side}`;
   return page(o.width, o.height, css, body, true);
 }
 

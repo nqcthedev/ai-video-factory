@@ -37,7 +37,7 @@ export const FORMATS: Record<FormatName, FormatSpec> = {
     speechRate: 1.12,
     scenes: [6, 8],
     targetSec: [42, 56],
-    captions: { fontSize: 100, marginV: 560, marginH: 120, maxWordsPerChunk: 3, maxCharsPerChunk: 16, outline: 8, shadow: 4 },
+    captions: { fontSize: 94, marginV: 560, marginH: 100, maxWordsPerChunk: 3, maxCharsPerChunk: 15, outline: 8, shadow: 4 },
   },
   long: {
     name: "long",

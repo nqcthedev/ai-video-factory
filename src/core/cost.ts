@@ -1,4 +1,4 @@
-import type { AppConfig } from "../config/schema.js";
+import { type AppConfig, ConfigSchema } from "../config/schema.js";
 
 export interface CostInput {
   llm?: { model: string; promptTokens: number; completionTokens: number };
@@ -18,6 +18,8 @@ const round = (n: number) => Math.round(n * 10_000) / 10_000;
 
 /** Estimate the API spend of one video from usage counters and the configured price table. */
 export function estimateCost(input: CostInput, prices: AppConfig["costs"]): CostBreakdown {
+  // Built-in prices fill gaps in older job snapshots / user tables.
+  prices = { ...prices, llm: { ...ConfigSchema.parse({}).costs.llm, ...prices.llm } };
   const notes: string[] = [];
   let llmUsd = 0;
   if (input.llm) {

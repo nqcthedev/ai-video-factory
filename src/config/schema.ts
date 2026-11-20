@@ -6,7 +6,7 @@ export const THEMES = ["midnight", "ocean", "sunset", "forest", "ember", "mono"]
 export const FORMATS = ["short", "long"] as const;
 export const TRANSITIONS = [
   "fade", "fadeblack", "smoothleft", "smoothright", "smoothup", "smoothdown", "slideleft", "slideup",
-  "circleopen", "wipeleft", "dissolve", "zoomin",
+  "circleopen", "wipeleft", "dissolve", "zoomin", "slideright", "slidedown",
 ] as const;
 
 export type TtsProviderName = (typeof TTS_PROVIDERS)[number];
@@ -30,11 +30,13 @@ const Channel = z.object({
 const Llm = z.object({
   provider: z.enum(["gemini", "openai"]).default("gemini"),
   model: z.string().default("gemini-2.5-flash"),
+  /** Tried in order when the primary model is out of quota / unavailable (same provider + key). */
+  fallbackModels: z.array(z.string()).default(["gemini-3-flash-preview", "gemini-3.5-flash-lite"]),
   /** OpenAI-compatible base URL. Gemini: https://generativelanguage.googleapis.com/v1beta/openai/ */
   baseUrl: z.string().url().optional(),
   temperature: z.number().min(0).max(2).default(0.8),
   /** Attempts to get schema-valid JSON before giving up. */
-  maxAttempts: z.number().int().min(1).max(6).default(3),
+  maxAttempts: z.number().int().min(1).max(6).default(4),
   requestsPerMinute: z.number().int().positive().default(8),
   timeoutMs: z.number().int().positive().default(120_000),
   /** Sent as `reasoning_effort` (Gemini 2.5 / OpenAI reasoning models). "none" disables thinking tokens. */
@@ -111,7 +113,7 @@ const Music = z.object({
   /** Path to your own licensed track/folder. Without it a royalty-free ambient pad is synthesized locally. */
   path: z.string().optional(),
   /** Music bed level relative to full scale before ducking (dB). */
-  volumeDb: z.number().min(-60).max(0).default(-24),
+  volumeDb: z.number().min(-60).max(0).default(-17),
   /** Sidechain-duck the music under the voice. */
   duck: z.boolean().default(true),
 });
@@ -122,8 +124,8 @@ const Render = z.object({
   preset: z.enum(["ultrafast", "veryfast", "faster", "fast", "medium", "slow"]).default("medium"),
   transition: z
     .object({
-      duration: z.number().min(0).max(1.5).default(0.45),
-      types: z.array(z.enum(TRANSITIONS)).min(1).default(["smoothleft", "fade", "smoothup", "circleopen"]),
+      duration: z.number().min(0).max(1.5).default(0.4),
+      types: z.array(z.enum(TRANSITIONS)).min(1).default(["slideleft", "slideup"]),
     })
     .prefault({}),
   /** Ken Burns: final zoom factor for background layers (1.0 = static). */
@@ -164,6 +166,7 @@ const Costs = z.object({
     .default({
       "gemini-2.5-flash": { inputPerMTok: 0.3, outputPerMTok: 2.5 },
       "gemini-2.5-flash-lite": { inputPerMTok: 0.1, outputPerMTok: 0.4 },
+      "gemini-3-flash-preview": { inputPerMTok: 0.5, outputPerMTok: 3.0 },
       "gpt-4o-mini": { inputPerMTok: 0.15, outputPerMTok: 0.6 },
     }),
   tts: z

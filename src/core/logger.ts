@@ -74,7 +74,10 @@ function make(sink: Sink, bindings: Record<string, unknown>, files: string[] = [
 function serialize(fields?: Record<string, unknown>): Record<string, unknown> {
   if (!fields) return {};
   const out: Record<string, unknown> = {};
-  for (const [k, v] of Object.entries(fields)) out[k] = v instanceof Error ? { name: v.name, message: v.message } : v;
+  for (const [k, v] of Object.entries(fields)) {
+    if (v === undefined) continue;
+    out[k] = v instanceof Error ? { name: v.name, message: v.message } : v;
+  }
   return out;
 }
 

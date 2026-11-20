@@ -102,7 +102,49 @@ export class OpenAiCompatibleClient implements LlmClient {
   }
 }
 
+/**
+ * Model-level fallback: when a model's quota is exhausted (free-tier daily cap, `limit: 0`),
+ * it is removed or unknown (404), or it keeps failing after retries, the next model is tried.
+ * An exhausted model is skipped for the rest of the process.
+ */
+export class FallbackLlmClient implements LlmClient {
+  private readonly dead = new Set<string>();
+  constructor(
+    private readonly clients: LlmClient[],
+    private readonly log: Logger = nullLogger,
+  ) {
+    if (!clients.length) throw new Error("FallbackLlmClient needs at least one client");
+  }
+
+  get model(): string {
+    return this.clients.find((c) => !this.dead.has(c.model))?.model ?? this.clients[0]!.model;
+  }
+
+  async chat(messages: ChatMessage[], opts?: { json?: boolean; temperature?: number }): Promise<ChatResult> {
+    let lastErr: unknown;
+    for (const c of this.clients) {
+      if (this.dead.has(c.model)) continue;
+      try {
+        return await c.chat(messages, opts);
+      } catch (err) {
+        if (!(err instanceof ProviderError)) throw err;
+        lastErr = err;
+        const notFound = /HTTP 404/.test(err.message);
+        if (err.exhausted || notFound) this.dead.add(c.model);
+        this.log.warn(`llm model ${c.model} failed, trying next`, { exhausted: err.exhausted, error: err.message.slice(0, 160) });
+      }
+    }
+    throw lastErr;
+  }
+}
+
 export function createLlmClient(cfg: AppConfig["llm"], env: AppEnv, deps: { fetch?: FetchLike; logger?: Logger; sleep?: (ms: number) => Promise<void> } = {}): LlmClient {
+  const models = [cfg.model, ...cfg.fallbackModels.filter((m) => m !== cfg.model)];
+  const clients = models.map((model) => createSingleClient({ ...cfg, model }, env, deps));
+  return clients.length === 1 ? clients[0]! : new FallbackLlmClient(clients, deps.logger);
+}
+
+function createSingleClient(cfg: AppConfig["llm"], env: AppEnv, deps: { fetch?: FetchLike; logger?: Logger; sleep?: (ms: number) => Promise<void> }): LlmClient {
   const isGemini = cfg.provider === "gemini";
   return new OpenAiCompatibleClient({
     baseUrl: cfg.baseUrl ?? (isGemini ? env.GEMINI_BASE_URL : env.OPENAI_BASE_URL),

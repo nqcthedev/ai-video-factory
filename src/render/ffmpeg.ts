@@ -71,6 +71,8 @@ export interface VideoGraphInput {
   output: string;
   crf: number;
   preset: string;
+  /** Fade to black over the last 0.5 s (default: only for landscape). */
+  fadeOut?: boolean;
 }
 
 /**
@@ -104,12 +106,16 @@ export function buildRenderArgs(o: VideoGraphInput): string[] {
         `scale=w='trunc(${W}*${zExpr}/2)*2':h='trunc(${H}*${zExpr}/2)*2':eval=frame:flags=bicubic,` +
         `crop=${W}:${H}:x='${xExpr}':y='(ih-${H})/2',setsar=1[bg${i}]`,
     );
+    // The first scene's graphics are on screen from frame 0 (the first frame doubles as a
+    // preview/thumbnail and must never be empty); later scenes ease in during the transition.
+    const animate = i > 0;
     f.push(
-      `[${i * 2 + 1}:v]format=rgba,loop=loop=${frames - 1}:size=1:start=0,setpts=N/${fps}/TB,` +
-        `fade=t=in:st=0.12:d=0.45:alpha=1[fg${i}]`,
+      `[${i * 2 + 1}:v]format=rgba,loop=loop=${frames - 1}:size=1:start=0,setpts=N/${fps}/TB` +
+        `${animate ? ",fade=t=in:st=0.12:d=0.45:alpha=1" : ""}[fg${i}]`,
     );
     // Ease-out slide up (cubic) during the first 0.6 s.
-    f.push(`[bg${i}][fg${i}]overlay=x=0:y='if(lt(t,0.6),${Math.round(H * 0.025)}*pow(1-t/0.6,3),0)':eval=frame:shortest=1,fps=${fps},format=yuv420p[v${i}]`);
+    const y = animate ? `'if(lt(t,0.6),${Math.round(H * 0.025)}*pow(1-t/0.6,3),0)'` : "0";
+    f.push(`[bg${i}][fg${i}]overlay=x=0:y=${y}:eval=frame:shortest=1,fps=${fps},format=yuv420p[v${i}]`);
   });
   let last = "v0";
   o.timeline.transitionOffsets.forEach((off, k) => {
@@ -121,7 +127,10 @@ export function buildRenderArgs(o: VideoGraphInput): string[] {
   if (n === 1) f.push(`[v0]null[vx]`);
   const tail: string[] = [];
   if (o.subtitles) tail.push(`subtitles=filename='${escapeFilterPath(o.subtitles.file)}':fontsdir='${escapeFilterPath(o.subtitles.fontsDir)}'`);
-  tail.push(`fade=t=in:st=0:d=0.25`, `fade=t=out:st=${Math.max(0, o.timeline.total - 0.5).toFixed(3)}:d=0.5`, "format=yuv420p");
+  // No fade from black at the start (first frame = preview). Vertical shorts loop, so they
+  // don't fade out either; 16:9 videos get a short fade to black at the very end.
+  if (o.fadeOut ?? W > H) tail.push(`fade=t=out:st=${Math.max(0, o.timeline.total - 0.5).toFixed(3)}:d=0.5`);
+  tail.push("format=yuv420p");
   f.push(`[vx]${tail.join(",")}[vout]`);
   args.push(
     "-filter_complex", f.join(";"),
@@ -198,4 +207,25 @@ export function buildLoudnormArgs(
   const graph = `${buildAudioFilter(o)};[mix]${ln},aresample=48000[out]`;
   const args = ["-y", "-hide_banner", "-nostats", ...audioInputs(o), "-filter_complex", graph, "-map", "[out]", "-t", o.total.toFixed(3)];
   return measured ? [...args, "-c:a", "pcm_s16le", "-ar", "48000", o.output] : [...args, "-f", "null", "-"];
+}
+
+export interface QaReport {
+  integratedLufs: number;
+  truePeakDb: number;
+  blackSegments: Array<{ start: number; end: number }>;
+}
+
+/** Parse ebur128 summary + blackdetect lines from one `-f null` analysis pass. */
+export function parseQa(stderr: string): QaReport {
+  const summary = stderr.slice(stderr.lastIndexOf("Summary:"));
+  const integratedLufs = Number(/I:\s+(-?[\d.]+) LUFS/.exec(summary)?.[1] ?? NaN);
+  const truePeakDb = Number(/Peak:\s+(-?[\d.]+|-inf) dBFS/.exec(summary)?.[1] ?? NaN);
+  const blackSegments = [...stderr.matchAll(/black_start:([\d.]+) black_end:([\d.]+)/g)].map((m) => ({ start: Number(m[1]), end: Number(m[2]) }));
+  return { integratedLufs, truePeakDb, blackSegments };
+}
+
+/** Decode the finished file once: loudness (EBU R128, true peak) and black-frame detection. */
+export async function analyzeOutput(file: string): Promise<QaReport> {
+  const { stderr } = await runFfmpeg(["-hide_banner", "-nostats", "-i", file, "-vf", "blackdetect=d=0.3:pix_th=0.06", "-af", "ebur128=peak=true", "-f", "null", "-"]);
+  return parseQa(stderr);
 }

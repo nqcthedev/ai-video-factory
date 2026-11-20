@@ -4,6 +4,8 @@ import type { AppConfig } from "../config/schema.js";
 import type { Job } from "../core/job.js";
 import type { FormatSpec } from "../formats.js";
 import {
+  analyzeOutput,
+  type QaReport,
   type AudioMixInput,
   buildLoudnormArgs,
   buildRenderArgs,
@@ -24,6 +26,8 @@ export interface RenderStageData {
   music: string | null;
   loudness: { inputLufs: number; targetLufs: number };
   encodeMs: number;
+  /** Automatic check of the delivered file. */
+  qa: QaReport & { passed: boolean; issues: string[] };
 }
 
 const AUDIO_EXT = new Set([".mp3", ".wav", ".m4a", ".aac", ".ogg", ".flac", ".opus"]);
@@ -99,6 +103,14 @@ export async function runRenderStage(
     },
   });
   const duration = await probeDuration(job.path(video));
+  const report = await analyzeOutput(job.path(video));
+  const issues: string[] = [];
+  if (Math.abs(duration - timeline.total) > 0.25) issues.push(`duration ${duration.toFixed(2)}s != timeline ${timeline.total.toFixed(2)}s`);
+  if (!(Math.abs(report.integratedLufs - render.loudness.integratedLufs) <= 1)) issues.push(`loudness ${report.integratedLufs} LUFS (target ${render.loudness.integratedLufs})`);
+  if (report.truePeakDb > render.loudness.truePeakDb + 0.5) issues.push(`true peak ${report.truePeakDb} dBFS`);
+  if (report.blackSegments.length) issues.push(`black frames at ${report.blackSegments.map((b) => `${b.start}-${b.end}s`).join(", ")}`);
+  if (issues.length) job.log.warn("output QA found issues", { issues });
+  else job.log.info("output QA passed", { lufs: report.integratedLufs, truePeak: report.truePeakDb, duration });
   return {
     video,
     audio: "audio/final.wav",
@@ -107,5 +119,6 @@ export async function runRenderStage(
     music: music.path,
     loudness: { inputLufs: Number(measured.input_i), targetLufs: render.loudness.integratedLufs },
     encodeMs: Date.now() - t0,
+    qa: { ...report, passed: issues.length === 0, issues },
   };
 }
