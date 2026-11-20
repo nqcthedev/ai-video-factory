@@ -1,0 +1,48 @@
+# Example: copy to .github/workflows/daily-short.yml in your channel repo.
+# Renders one Short per day from the next topic and uploads it as a scheduled (private → public) video.
+name: Daily Short
+
+on:
+  schedule:
+    - cron: "17 2 * * *"   # 02:17 UTC daily
+  workflow_dispatch:
+    inputs:
+      topic:
+        description: "Topic (optional, defaults to the next line in topics.txt)"
+        required: false
+
+jobs:
+  make:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 10 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - run: pnpm install --frozen-lockfile && pnpm build
+      - run: npx playwright install --with-deps chromium
+      - name: Cache Kokoro model
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ai-video-factory/models
+          key: kokoro-v1.0
+      - run: node dist/cli.js models download
+      - name: Make and schedule the video
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
+          YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
+          YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+          AVF_LOG_FORMAT: json
+        run: |
+          TOPIC="${{ github.event.inputs.topic }}"
+          if [ -z "$TOPIC" ]; then TOPIC=$(sed -n "$(( $(date +%j) % $(wc -l < topics.txt) + 1 ))p" topics.txt); fi
+          PUBLISH_AT=$(date -u -d "today 15:00" +%Y-%m-%dT%H:%M:%SZ)
+          node dist/cli.js make "$TOPIC" --format short --publish --publish-at "$PUBLISH_AT" --out out
+      - uses: actions/upload-artifact@v4
+        with:
+          name: video
+          path: out/

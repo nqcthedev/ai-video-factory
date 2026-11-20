@@ -1,0 +1,63 @@
+# Copy to avf.config.yaml and edit. Every key is optional — omitted keys use the defaults shown.
+# Secrets (API keys, OAuth tokens) are read from the environment / .env only, never from this file.
+
+channel:
+  name: Curious Minutes
+  niche: evergreen science, psychology and self-improvement explainers
+  tone: warm, curious and punchy; concrete facts over hype; no clickbait claims
+  audience: general audience, 16-45, watching on a phone
+  language: English
+  callToAction: Follow for one new idea every day.
+  theme: auto            # auto | midnight | ocean | sunset | forest | ember | mono
+  extraInstructions: ""  # e.g. "Never mention competitors. Always end with a question."
+
+llm:
+  provider: gemini       # gemini (OpenAI-compatible endpoint) | openai
+  model: gemini-2.5-flash
+  fallbackModels: [gemini-3-flash-preview, gemini-3.5-flash-lite]  # used when the primary is out of quota
+  temperature: 0.8
+  maxAttempts: 4         # schema/editorial validation retries
+  requestsPerMinute: 8
+  reasoningEffort: low   # none | low | medium | high
+
+tts:
+  order: [kokoro, gemini, openai, elevenlabs]   # one voice per video; next provider re-voices everything
+  sceneGapSec: 0.28
+  kokoro: { voice: af_heart, speed: 1.0, lang: en-us, sentencePauseSec: 0.12 }
+  gemini: { model: gemini-2.5-flash-preview-tts, voice: Kore }
+  openai: { model: gpt-4o-mini-tts, voice: coral, speed: 1.0 }
+  elevenlabs: { voiceId: 21m00Tcm4TlvDq8ikWAM, modelId: eleven_multilingual_v2 }
+
+visuals:
+  order: [designed]      # e.g. [gemini-image, pexels, designed] — "designed" is always the last resort
+  concurrency: 3
+
+render:
+  fps: 30
+  crf: 20
+  preset: medium
+  transition: { duration: 0.4, types: [slideleft, slideup] }
+  kenBurnsZoom: 1.08
+  captions: { enabled: true, font: Inter Display Black, uppercase: true }   # highlightColor: "#FFD23F"
+  music:
+    enabled: true
+    # path: ./music        # your licensed track or a folder of tracks; otherwise a pad is synthesized
+    volumeDb: -17
+    duck: true
+  loudness: { integratedLufs: -14, truePeakDb: -1.5, lra: 11 }
+
+publish:
+  youtube:
+    enabled: false
+    privacyStatus: private
+    # publishAt: 2026-12-01T15:00:00Z
+    categoryId: "27"       # Education
+    madeForKids: false
+    containsSyntheticMedia: true
+
+batch:
+  concurrency: 2
+
+paths:
+  jobsDir: jobs
+  # modelsDir: ~/.cache/ai-video-factory/models

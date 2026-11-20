@@ -1,0 +1,11 @@
+# avf batch examples/topics.yaml
+defaults:
+  format: short
+topics:
+  - Why octopuses are so smart
+  - topic: The 5-minute rule to beat procrastination
+    format: long
+    brief: "Practical, no made-up statistics. End with 3 tips."
+  - topic: Why cats purr
+    publish: true
+    publishAt: 2026-12-01T15:00:00Z   # requires YouTube OAuth env vars
