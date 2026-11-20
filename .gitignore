@@ -1,0 +1,11 @@
+node_modules/
+dist/
+jobs/
+.avf/
+*.log
+.env
+.env.*
+!.env.example
+coverage/
+samples/*.mp4
+.DS_Store
